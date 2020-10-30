@@ -1,6 +1,7 @@
 package com.capgemini.employeepayrollservice.jdbc;
 
 import java.util.Arrays;
+import exception.PayrollSystemException;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,9 +12,9 @@ public class EmployeePayrollServiceTest {
 	@Test
 	public void given3EmployeesWhenWrittenToFileShouldMatchEmployeeEnteries() {
 		EmployeePayrollData[] arrayOfEmps= {
-				new EmployeePayrollData(1,"Abhijeet Kumar Giri", 50000.0),
-				new EmployeePayrollData(2,"Amit Kumar", 51000.0),
-				new EmployeePayrollData(3,"Rapeti", 45000.0)
+				new EmployeePayrollData(1,"satyam", 50000.0),
+				new EmployeePayrollData(2,"shivam", 51000.0),
+				new EmployeePayrollData(3,"sundram", 45000.0)
 		};
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService=new EmployeePayrollService(Arrays.asList(arrayOfEmps));
@@ -33,5 +34,14 @@ public class EmployeePayrollServiceTest {
 	EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 	List<EmployeePayrollData> employeePayrollData=employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
 	Assert.assertEquals(6,employeePayrollData.size());
+	}
+	
+	@Test
+	public void givenNewSalaryForEmployee_WhenUpdated_ShouldSyncWithDB() throws PayrollSystemException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		employeePayrollService.updateEmployeeSalary("satyam",20000.0);
+		boolean result=employeePayrollService.checkEmployeePayrollInSyncWithDB("satyam");
+		Assert.assertTrue(result);
 	}
 }

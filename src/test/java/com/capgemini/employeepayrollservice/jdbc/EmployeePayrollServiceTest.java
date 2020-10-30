@@ -1,6 +1,7 @@
 package com.capgemini.employeepayrollservice.jdbc;
 
 import java.time.LocalDate;
+
 import java.util.Arrays;
 import exception.PayrollSystemException;
 import java.util.List;
@@ -36,7 +37,7 @@ public class EmployeePayrollServiceTest {
 	public void givenEmployeePayrollInDB_WhenRetrieved_ShouldMatchEmployeeCount() {
 	EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 	List<EmployeePayrollData> employeePayrollData=employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
-	Assert.assertEquals(6,employeePayrollData.size());
+	Assert.assertEquals(22,employeePayrollData.size());
 	}
 	
 	//@Test /*UC3*/
@@ -66,7 +67,7 @@ public class EmployeePayrollServiceTest {
 		LocalDate endDate = LocalDate.now();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService
 				.readEmployeePayrollForDateRange(IOService.DB_IO, startDate, endDate);
-		Assert.assertEquals(4, employeePayrollData.size());
+		Assert.assertEquals(20, employeePayrollData.size());
 	}
 	
 	/*UC6*/
@@ -76,9 +77,19 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
 		Map<String, Double> genderToAverageSalaryMap = employeePayrollService.getAvgSalary(IOService.DB_IO);
-		Double avgSalaryMale = 150226.8;
+		Double avgSalaryMale = 70045.36;
 		Assert.assertEquals(avgSalaryMale, genderToAverageSalaryMap.get("M"));
 		Double avgSalaryFemale = 567.87;
 		Assert.assertEquals(avgSalaryFemale, genderToAverageSalaryMap.get("F"));
+	}
+	/*UC7*/
+
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		employeePayrollService.addEmployeeToPayroll("Ani",50000.0,LocalDate.now(),'M');
+		boolean result=employeePayrollService.checkEmployeePayrollInSyncWithDB("Ani");
+		Assert.assertTrue(result);
 	}
 }

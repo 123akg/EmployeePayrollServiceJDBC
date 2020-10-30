@@ -12,7 +12,6 @@ import java.util.List;
 import com.capgemini.employeepayrollservice.jdbc.*;
 
 public class EmployeePayrollDBService {
-	
 	private PreparedStatement employeePayrollDataStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
 
@@ -25,6 +24,7 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollDBService;
 	}
+
 	
 	
 	private Connection getConnection() throws SQLException {
@@ -60,6 +60,20 @@ public class EmployeePayrollDBService {
 		try (Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			return statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int updateEmployeeDataUsingPreparedStatement(String name, double salary) {  /*UC-4*/
+		try (Connection connection = this.getConnection();) {
+			String sql = "update employee_payroll set salary=? where name=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setDouble(1, salary);
+			preparedStatement.setString(2, name);
+			int status = preparedStatement.executeUpdate();
+			return status;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

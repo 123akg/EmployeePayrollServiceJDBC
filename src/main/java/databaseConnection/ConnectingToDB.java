@@ -1,4 +1,4 @@
-package com.capgemini.employeepayrollservice.jdbc;
+package databaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
